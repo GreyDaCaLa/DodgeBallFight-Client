@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <Canvas orthographic camera={{ position: [11, 6, 2], fov: 50, zoom: 20 }} style={{ background: "lightblue" }}>
+      <Canvas orthographic camera={{ position: [11, 6, 2], fov: 50, zoom: 50 }} style={{ background: "lightblue" }}>
         <OrbitControls target={[11, 6, 0]} />
 
         <Scene />
