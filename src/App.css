@@ -1,0 +1,51 @@
+body,
+#root {
+  width: 100vw;
+  height: 100vh;
+  padding: 0px;
+  margin: 0px;
+}
+
+.buttonlistcontainer {
+  position: absolute;
+  /* left: -50vw; */
+  /* top: -50vh; */
+  right: 0vw;
+  top: 10vh;
+  margin: 10px;
+  /* padding-top: 500px; */
+  padding: 5px;
+  height: 50vh;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-color: red; */
+  overflow-y: scroll;
+  z-index: 10;
+}
+/* .buttonlistcontainer::-webkit-scrollbar {
+  display: none;
+} */
+
+.animationselectorbutton {
+  height: fit-content;
+  width: fit-content;
+  position: relative;
+  top: 400px;
+  margin-bottom: 5px;
+  padding: 10px;
+
+  background-color: lightgrey;
+  border: 0px, solid, black;
+  border-radius: 5px;
+}
+
+.animationselectorbutton:hover {
+  background-color: darkgrey;
+}
+
+.selectedbutton{
+  background-color: burlywood;
+}
