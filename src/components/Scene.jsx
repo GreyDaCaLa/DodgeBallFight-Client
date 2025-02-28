@@ -5,13 +5,16 @@ import { useFrame } from "@react-three/fiber";
 import { degToRad } from "three/src/math/MathUtils.js";
 import Player from "./player";
 import { useKeyboard } from "../hooks/useKeyBoard";
+import { useUserInput } from "../context/UserInputContext";
 
 function Scene() {
   const mapsizeWidth = 20;
   const mapsizeHeight = 10;
   const mapBorderThinkness = 2;
   const [testbool, setTestBool] = useState(false);
-  const { jump, moveDown, moveLeft, moveRight } = useKeyboard();
+  // const { jump, moveDown, moveLeft, moveRight } = useKeyboard();
+  const { jump, moveDown, moveLeft, moveRight } = useUserInput()
+
   const frameWallDelay = {
     0: 0,
     1: 1,
@@ -36,7 +39,7 @@ function Scene() {
     onground: false,
   });
   const WorldConstants = {
-    acc: [0, -0.05, 0],
+    acc: [0, -0.01, 0],
     vel: [0, 0, 0],
     speedHoz: 0.1,
     speedVert: 0.1,
@@ -74,7 +77,7 @@ function Scene() {
     if (jump || moveDown || moveLeft || moveRight) {
       if (jump && playerStatus.current.onground) {
         playerStatus.current.onground = false;
-        playerStatus.current.vel[1] = 0.8;
+        playerStatus.current.vel[1] = 0.3;
       }
       if (moveDown) {
         if (!playerStatus.current.onground) {
@@ -243,6 +246,7 @@ function Scene() {
         boxHeight={playerStatus.current.boxHeight}
         boxWidth={playerStatus.current.boxWidth}
       />
+      {/* <Player /> */}
       <Ball position={ballstatus.current.position} ballRadius={[ballstatus.current.ballRadius]} />
     </>
   );
