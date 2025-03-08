@@ -2,28 +2,29 @@ import { useFrame } from "@react-three/fiber";
 import { useUserInput } from "../context/UserInputContext";
 import { useKeyboard } from "../hooks/useKeyBoard";
 
-function AttackingWalls({ playerPosition = [3, 3, 0] }) {
-  const { jump, moveDown, moveLeft, moveRight, attack } = useUserInput();
+function AttackingWalls({ playerPosition = [3, 3, 0], wallSpecs={mid:1.2,top:1.2,bot:1.2},rightfacing=false }) {
+  const { jump, moveDown, moveLeft, moveRight, attack, inputHolds } = useUserInput();
 
-  useFrame(()=>{
-    if(attack){
-      console.log(attack )
-    }
-  })
+  // useFrame(()=>{
+  //   if(attack){
+  //     console.log(attack )
+  //   }
+  // })
 
   function displayPlayerWalls() {
 
-    let midwalldirection = moveRight?-1:moveLeft?-5:-1
-    let topcornerwalldirection = moveRight?0:moveLeft?2:0
-    let botcornerwalldirection = moveRight?-2:moveLeft?-4:-2
+    let midwalldirection = rightfacing?-1:-5
+    let topcornerwalldirection = rightfacing?0:2
+    let botcornerwalldirection = rightfacing?-2:-4
 
 
 
     return (
       <>
+          {/* topCorner */}
         {attack && !moveDown && jump?
         <mesh position={[0, 1, 0]}>
-          <ringGeometry args={[1, 1.2, 1, 1, (topcornerwalldirection/4) * Math.PI, 0.25 * (2 * Math.PI)]} />
+          <ringGeometry args={[wallSpecs['top']-.1, wallSpecs['top'], 1, 1, (topcornerwalldirection/4) * Math.PI, 0.25 * (2 * Math.PI)]} />
           {/* args?: [
             innerRadius?: number | undefined,
             outerRadius?: number | undefined,
@@ -38,15 +39,15 @@ function AttackingWalls({ playerPosition = [3, 3, 0] }) {
         {/* botCorner */}
         {attack && moveDown && !jump?
         <mesh position={[0, -1, 0]}>
-          <ringGeometry args={[1, 1.1, 20, 1, (botcornerwalldirection/4)* Math.PI, 0.25 * (2 * Math.PI)]} />
+          <ringGeometry args={[wallSpecs['bot']-.1, wallSpecs['bot'], 20, 1, (botcornerwalldirection/4)* Math.PI, 0.25 * (2 * Math.PI)]} />
           <meshStandardMaterial color={'blue'} />
         </mesh>
 
         :<></>}
         {/* midmid */}
-            {attack && !moveDown && !jump?
+            {inputHolds.current['attack'].act && !moveDown && !jump?
         <mesh position={[0, 0, 0]}>
-          <ringGeometry args={[1, 1.1, 20, 1, (midwalldirection/4) * Math.PI, (1/4) * (2 * Math.PI)]} />
+          <ringGeometry args={[wallSpecs['mid']-.1, wallSpecs['mid'], 20, 1, (midwalldirection/4) * Math.PI, (1/4) * (2 * Math.PI)]} />
           <meshStandardMaterial color={'blue'} />
         </mesh>
             

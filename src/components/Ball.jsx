@@ -1,5 +1,5 @@
 
-function Ball({position=[3,3,0],ballRadius=[1]}) {
+function Ball({position=[3,3,0],ballRadius=[1],color='red'}) {
     // console.log(position)
     return (
       <>
@@ -8,7 +8,7 @@ function Ball({position=[3,3,0],ballRadius=[1]}) {
         <group>
           <mesh position={position}>
             <sphereGeometry args={ballRadius}/>
-            <meshStandardMaterial color={'red'}/>
+            <meshStandardMaterial color={color}/>
           </mesh>
         </group>
       </>
