@@ -5,14 +5,15 @@ const GS = GLOBAL_SETTINGS
 
 
 
-export function movePlayer() {
+export function movePlayer(playerStatus) {
+    let plyin = playerInputs
   // player gravity
   if (true) {
     const btk = GS.mapBorderThinkness;
     const bh = playerStatus.current.boxHeight;
     const botlimit = btk / 2 + bh / 2;
     if (!playerStatus.current.onground) {
-      playerStatus.current.vel[1] += WorldConstants.acc[1];
+      playerStatus.current.vel[1] += GS.WorldConstants.acc[1];
       playerStatus.current.position[1] += playerStatus.current.vel[1];
       if (playerStatus.current.position[1] <= botlimit) {
         playerStatus.current.position[1] = botlimit;
@@ -21,36 +22,36 @@ export function movePlayer() {
       }
     }
   }
-  if (jump || moveDown || moveLeft || moveRight) {
-    if (jump && playerStatus.current.onground) {
+  if (plyin.jump || plyin.moveDown || plyin.moveLeft || plyin.moveRight) {
+    if (plyin.jump && playerStatus.current.onground) {
       playerStatus.current.onground = false;
       playerStatus.current.vel[1] = 0.3;
     }
-    if (moveDown) {
+    if (plyin.moveDown) {
       if (!playerStatus.current.onground) {
-        playerStatus.current.position[1] -= WorldConstants.speedVert;
+        playerStatus.current.position[1] -= GS.WorldConstants.speedVert;
       }
     }
-    if (moveLeft) {
-      playerStatus.current.position[0] -= WorldConstants.speedHoz;
+    if (plyin.moveLeft) {
+      playerStatus.current.position[0] -= GS.WorldConstants.speedHoz;
       playerStatus.current.rightfacing = false;
     }
-    if (moveRight) {
-      playerStatus.current.position[0] += WorldConstants.speedHoz;
+    if (plyin.moveRight) {
+      playerStatus.current.position[0] += GS.WorldConstants.speedHoz;
       playerStatus.current.rightfacing = true;
     }
   }
-  if (attack || inputHolds.current["attack"].tt) {
-    // console.log(`att-${inputHolds.current['attack'].act} - ${inputHolds.current['attack'].tt}`)
-    inputHolds.current["attack"].act = true;
+  // if (plyin.attack || plyin.inputHolds.current["attack"].tt) {
+  //   // console.log(`att-${inputHolds.current['attack'].act} - ${inputHolds.current['attack'].tt}`)
+  //   plyin.inputHolds.current["attack"].act = true;
 
-    inputHolds.current["attack"].tt += 1;
-    if (inputHolds.current["attack"].tt >= inputHolds.current["attack"].ps) {
-      inputHolds.current["attack"].dn = true;
-      inputHolds.current["attack"].tt = 0;
-      inputHolds.current["attack"].act = false;
-    }
-  }
+  //   plyin.inputHolds.current["attack"].tt += 1;
+  //   if (plyin.inputHolds.current["attack"].tt >= plyin.inputHolds.current["attack"].ps) {
+  //     plyin.inputHolds.current["attack"].dn = true;
+  //     plyin.inputHolds.current["attack"].tt = 0;
+  //     plyin.inputHolds.current["attack"].act = false;
+  //   }
+  // }
   checkplayerBorderBoundries();
 }
 
@@ -58,7 +59,7 @@ export function degToRad(deg) {
   return (deg * Math.PI) / 180;
 }
 
-export function moveBall() {
+export function moveBall(ballstatus) {
   ballstatus.current.oldBallPosition = [...ballstatus.current.position];
   let [x, y, z] = ballstatus.current.position;
   let dir = ballstatus.current.direction;
@@ -142,10 +143,10 @@ export function calcNewDir(border, dir) {
   return dir;
 }
 
-export function checkplayerBorderBoundries() {
-  const btk = mapBorderThinkness;
-  const sw = mapsizeWidth;
-  const sh = mapsizeHeight;
+export function checkplayerBorderBoundries(playerStatus) {
+  const btk = GS.mapBorderThinkness;
+  const sw = GS.mapsizeWidth;
+  const sh = GS.mapsizeHeight;
   const bw = playerStatus.current.boxWidth;
   const bh = playerStatus.current.boxHeight;
   let leftlimit = btk / 2 + bw / 2;
@@ -169,12 +170,12 @@ export function checkplayerBorderBoundries() {
   playerStatus.current.position = [x, y, z];
 }
 
-export function checkBallBorderBoundries(x, y, dx, dy) {
+export function checkBallBorderBoundries(x, y, dx, dy , ballstatus) {
   let dir = ballstatus.current.direction;
   let rad = degToRad(dir);
-  const btk = mapBorderThinkness;
-  const sw = mapsizeWidth;
-  const sh = mapsizeHeight;
+  const btk = GS.mapBorderThinkness;
+  const sw = GS.mapsizeWidth;
+  const sh = GS.mapsizeHeight;
   const br = ballstatus.current.ballRadius;
   let leftlimit = btk / 2 + br;
   let botlimit = btk / 2 + br;
@@ -260,7 +261,7 @@ export function calcAngle(s1, s2) {
   return Math.atan((y2 - y1) / (x2 - x1)) * (180 / Math.PI);
 }
 
-export function createballPosarray(oldpos, currpos) {
+export function createballPosarray(oldpos, currpos, ballstatus) {
   // console.log({oldpos,currpos})
   let [x1, y1, z1] = oldpos;
   let [x2, y2, z2] = currpos;
@@ -284,7 +285,7 @@ export function createballPosarray(oldpos, currpos) {
   ballstatus.current.midFrameBallArr = ballposarr;
 }
 
-export function ballChangeOnHit(attacktype, angletoball, expectedchange) {
+export function ballChangeOnHit(attacktype, angletoball, expectedchange, ballstatus,playerStatus) {
   let ball = ballstatus.current;
   let player = playerStatus.current;
   let [nx, ny, ndir] = expectedchange;
@@ -308,7 +309,8 @@ export function ballChangeOnHit(attacktype, angletoball, expectedchange) {
   return expectedchange;
 }
 
-export function checkBallandPlayerinteraction(expectedchange) {
+export function checkBallandPlayerinteraction(expectedchange,ballstatus,playerStatus,playerInputs) {
+    let plyin = playerInputs
   let ballspots = ballstatus.current.midFrameBallArr;
   let player = playerStatus.current;
   let ballwashit = false;
@@ -320,7 +322,7 @@ export function checkBallandPlayerinteraction(expectedchange) {
 
       if ((ballside >= 0 && player.rightfacing) || (ballside < 0 && !player.rightfacing)) {
         // is the player faceing the ball
-        if (inputHolds.current["attack"].act) {
+        if (plyin.inputHolds.current["attack"].act) {
           // is player wall up
           if (dist < player.wallSpecs.mid) {
             //did ball hit wall

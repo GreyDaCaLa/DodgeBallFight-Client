@@ -4,8 +4,15 @@ function Border({sizeW=20,sizeH=10, borderThickness=2}) {
     const borderdepth = 2
     // console.log('border')
 
+    /*
+
+    ------TODO 
+      this border should not re render on every frame... console log here or in display to see if its re rendering
+     */
+
 
     function displayBorder(){
+      // console.log('displayingborder')
         const btk = borderThickness
         const bdp = borderdepth
         const sw = sizeW
